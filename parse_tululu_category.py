@@ -91,10 +91,17 @@ def parse_book_page(page):
 
 
 if __name__ == '__main__':
-    next_page_url = f'https://tululu.org/l55/'
+    parser = ArgumentParser(description='Utility downloads books (book text in txt file, and cover) from tululu.org')
+    parser.add_argument('--start_id', type=int, default=1, help="id of first book in sequence")
+    parser.add_argument('--end_id', type=int, default=2, help="id of last book in sequence")
+    args = parser.parse_args()
+    start_id = args.start_id
+    end_id = args.end_id
 
-    i = 0
-    while next_page_url is not None and i < 1:
+    next_page_url = f'https://tululu.org/l55/{start_id}'
+
+    i = start_id
+    while next_page_url is not None and i < end_id:
         books_urls, next_page_url = get_books_urls(next_page_url)
         i += 1
 
