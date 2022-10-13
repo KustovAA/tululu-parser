@@ -94,9 +94,17 @@ if __name__ == '__main__':
     parser = ArgumentParser(description='Utility downloads books (book text in txt file, and cover) from tululu.org')
     parser.add_argument('--start_id', type=int, default=1, help="id of first book in sequence")
     parser.add_argument('--end_id', type=int, default=2, help="id of last book in sequence")
+    parser.add_argument('--dest_folder', type=str, default='./', help="folder of parsed data")
+    parser.add_argument('--skip_imgs', type=bool, default=False, help="do not load images")
+    parser.add_argument('--skip_txt', type=bool, default=False, help="do not load books")
+    parser.add_argument('--json_path', type=str, default='books_data.json', help="json file with results")
     args = parser.parse_args()
     start_id = args.start_id
     end_id = args.end_id
+    dest_folder = args.dest_folder
+    skip_imgs = args.skip_imgs
+    skip_txt = args.skip_txt
+    json_path = args.json_path
 
     next_page_url = f'https://tululu.org/l55/{start_id}'
 
@@ -111,12 +119,25 @@ if __name__ == '__main__':
                 parsed_book = parse_book_page(download_book_page(book_url).text)
                 img_folder, img_filename = parsed_book['img_path'].split('/')
                 book_folder, book_filename = parsed_book['book_path'].split('/')
-                img_filepath = download_image(urljoin(book_url, parsed_book['img_src']), img_filename, img_folder)
-                book_filepath = download_txt(urljoin(book_url, parsed_book['book_src']), book_filename, book_folder)
+
+                if skip_imgs:
+                    img_filepath = download_image(
+                        urljoin(book_url, parsed_book['img_src']),
+                        img_filename,
+                        os.path.join(dest_folder, img_folder)
+                    )
+
+                if skip_txt:
+                    book_filepath = download_txt(
+                        urljoin(book_url, parsed_book['book_src']),
+                        book_filename,
+                        os.path.join(dest_folder, book_folder)
+                    )
+
                 parsed_books.append(parsed_book)
             except AttributeError:
                 pass
 
         books_data = json.dumps(parsed_books, ensure_ascii=False).encode('utf8')
-        with open("books_data.json", "w") as file:
+        with open(os.path.join(dest_folder, json_path), "w") as file:
             file.write(books_data.decode())
