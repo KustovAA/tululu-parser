@@ -137,7 +137,7 @@ if __name__ == '__main__':
 
                 parsed_books.append(parsed_book)
             except AttributeError:
-                pass
+                continue
 
         books_data = json.dumps(parsed_books, ensure_ascii=False).encode('utf8')
         os.makedirs(dest_folder, exist_ok=True)
