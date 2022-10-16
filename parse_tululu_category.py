@@ -107,7 +107,7 @@ if __name__ == '__main__':
     next_page_url = f'https://tululu.org/l55/{start_page}'
 
     i = start_page
-    while next_page_url is not None and i < end_page:
+    while next_page_url and i < end_page:
         response = download_book_page(next_page_url)
         books_url_paths, next_page_url_path = extract_books_urls(response.text)
         books_urls = [urljoin(next_page_url, book_url_path) for book_url_path in books_url_paths]
