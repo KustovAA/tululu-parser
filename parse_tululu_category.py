@@ -92,24 +92,24 @@ def parse_book_page(page):
 
 if __name__ == '__main__':
     parser = ArgumentParser(description='Utility downloads books (book text in txt file, and cover) from tululu.org')
-    parser.add_argument('--start_id', type=int, default=1, help="id of first book in sequence")
-    parser.add_argument('--end_id', type=int, default=2, help="id of last book in sequence")
+    parser.add_argument('--start_page', type=int, default=1, help="id of first book in sequence")
+    parser.add_argument('--end_page', type=int, default=2, help="id of last book in sequence")
     parser.add_argument('--dest_folder', type=str, default='./', help="folder of parsed data")
     parser.add_argument('--skip_imgs', type=bool, default=False, help="do not load images")
     parser.add_argument('--skip_txt', type=bool, default=False, help="do not load books")
     parser.add_argument('--json_path', type=str, default='books_data.json', help="json file with results")
     args = parser.parse_args()
-    start_id = args.start_id
-    end_id = args.end_id
+    start_page = args.start_page
+    end_page = args.end_page
     dest_folder = args.dest_folder
     skip_imgs = args.skip_imgs
     skip_txt = args.skip_txt
     json_path = args.json_path
 
-    next_page_url = f'https://tululu.org/l55/{start_id}'
+    next_page_url = f'https://tululu.org/l55/{start_page}'
 
-    i = start_id
-    while next_page_url is not None and i < end_id:
+    i = start_page
+    while next_page_url is not None and i < end_page:
         books_urls, next_page_url = get_books_urls(next_page_url)
         i += 1
 
