@@ -140,7 +140,7 @@ if __name__ == '__main__':
             except AttributeError:
                 continue
 
-        books_data = json.dumps(parsed_books, ensure_ascii=False).encode('utf8')
+        parsed_books_serialized = json.dumps(parsed_books, ensure_ascii=False).encode('utf8')
         os.makedirs(dest_folder, exist_ok=True)
         with open(os.path.join(dest_folder, json_path), "w") as file:
-            file.write(books_data.decode())
+            file.write(parsed_books_serialized.decode())
