@@ -58,16 +58,14 @@ def download_image(url, filename, folder='images/'):
     return download_file(url, filename, folder)
 
 
-def get_books_urls(url):
-    response = download_book_page(url)
-
-    soup = BeautifulSoup(response.text, 'lxml')
-    books_urls = [
-        urljoin(url, book.find('a').attrs.get('href')) for book in soup.select('.d_book')
+def extract_books_urls(book_page):
+    soup = BeautifulSoup(book_page, 'lxml')
+    books_url_paths = [
+        book.find('a').attrs.get('href') for book in soup.select('.d_book')
     ]
-    next_page_url = urljoin(url, soup.select_one('.npage_select + .npage').attrs.get('href'))
+    next_page_url_path = soup.select_one('.npage_select + .npage').attrs.get('href')
 
-    return books_urls, next_page_url
+    return books_url_paths, next_page_url_path
 
 
 def parse_book_page(page):
@@ -110,7 +108,10 @@ if __name__ == '__main__':
 
     i = start_page
     while next_page_url is not None and i < end_page:
-        books_urls, next_page_url = get_books_urls(next_page_url)
+        response = download_book_page(next_page_url)
+        books_url_paths, next_page_url_path = extract_books_urls(response.text)
+        books_urls = [urljoin(next_page_url, book_url_path) for book_url_path in books_url_paths]
+        next_page_url = urljoin(next_page_url, next_page_url_path)
         i += 1
 
         parsed_books = []
@@ -139,5 +140,6 @@ if __name__ == '__main__':
                 pass
 
         books_data = json.dumps(parsed_books, ensure_ascii=False).encode('utf8')
+        os.makedirs(dest_folder, exist_ok=True)
         with open(os.path.join(dest_folder, json_path), "w") as file:
             file.write(books_data.decode())
