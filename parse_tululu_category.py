@@ -122,14 +122,14 @@ if __name__ == '__main__':
                 img_folder, img_filename = parsed_book['img_path'].split('/')
                 book_folder, book_filename = parsed_book['book_path'].split('/')
 
-                if skip_imgs:
+                if not skip_imgs:
                     img_filepath = download_image(
                         urljoin(book_url, parsed_book['img_src']),
                         img_filename,
                         os.path.join(dest_folder, img_folder)
                     )
 
-                if skip_txt:
+                if not skip_txt:
                     book_filepath = download_txt(
                         urljoin(book_url, parsed_book['book_src']),
                         book_filename,
