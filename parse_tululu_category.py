@@ -106,6 +106,7 @@ if __name__ == '__main__':
 
     next_page_url = f'https://tululu.org/l55/{start_page}'
 
+    parsed_books = []
     i = start_page
     while next_page_url and i < end_page:
         book_page = download_book_page(next_page_url)
@@ -114,7 +115,6 @@ if __name__ == '__main__':
         next_page_url = urljoin(next_page_url, next_page_url_path)
         i += 1
 
-        parsed_books = []
         for book_url in books_urls:
             try:
                 book_page = download_book_page(book_url)
@@ -141,6 +141,6 @@ if __name__ == '__main__':
 
             parsed_books.append(parsed_book)
 
-        os.makedirs(dest_folder, exist_ok=True)
-        with open(os.path.join(dest_folder, json_path), "w") as file:
-            json.dump(parsed_books, file, ensure_ascii=False)
+    os.makedirs(dest_folder, exist_ok=True)
+    with open(os.path.join(dest_folder, json_path), "w") as file:
+        json.dump(parsed_books, file, ensure_ascii=False)
