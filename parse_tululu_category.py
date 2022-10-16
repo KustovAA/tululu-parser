@@ -117,30 +117,30 @@ if __name__ == '__main__':
         parsed_books = []
         for book_url in books_urls:
             try:
-                book_page = download_book_page(next_page_url)
+                book_page = download_book_page(book_url)
                 parsed_book = parse_book_page(book_page)
-                img_folder, img_filename = parsed_book['img_path'].split('/')
-                book_folder, book_filename = parsed_book['book_path'].split('/')
-
-                if not skip_imgs:
-                    img_filepath = download_image(
-                        urljoin(book_url, parsed_book['img_src']),
-                        img_filename,
-                        os.path.join(dest_folder, img_folder)
-                    )
-
-                if not skip_txt:
-                    book_filepath = download_txt(
-                        urljoin(book_url, parsed_book['book_src']),
-                        book_filename,
-                        os.path.join(dest_folder, book_folder)
-                    )
-
-                parsed_books.append(parsed_book)
             except AttributeError:
                 continue
 
-        parsed_books_serialized = json.dumps(parsed_books, ensure_ascii=False).encode('utf8')
+            img_folder, img_filename = parsed_book['img_path'].split('/')
+            book_folder, book_filename = parsed_book['book_path'].split('/')
+
+            if not skip_imgs:
+                img_filepath = download_image(
+                    urljoin(book_url, parsed_book['img_src']),
+                    img_filename,
+                    os.path.join(dest_folder, img_folder)
+                )
+
+            if not skip_txt:
+                book_filepath = download_txt(
+                    urljoin(book_url, parsed_book['book_src']),
+                    book_filename,
+                    os.path.join(dest_folder, book_folder)
+                )
+
+            parsed_books.append(parsed_book)
+
         os.makedirs(dest_folder, exist_ok=True)
         with open(os.path.join(dest_folder, json_path), "w") as file:
-            file.write(parsed_books_serialized.decode())
+            json.dump(parsed_books, file, ensure_ascii=False)
