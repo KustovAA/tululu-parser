@@ -1,11 +1,11 @@
-from http.server import HTTPServer, SimpleHTTPRequestHandler
 import json
 import os
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
+from livereload import Server
 
 
-if __name__ == '__main__':
+def build_page():
     env = Environment(
         loader=FileSystemLoader('.'),
         autoescape=select_autoescape(['html', 'xml'])
@@ -22,5 +22,10 @@ if __name__ == '__main__':
     with open('index.html', 'w', encoding="utf8") as file:
         file.write(rendered_page)
 
-    server = HTTPServer(('0.0.0.0', 8000), SimpleHTTPRequestHandler)
-    server.serve_forever()
+
+if __name__ == '__main__':
+    build_page()
+
+    server = Server()
+    server.watch('template.html', build_page)
+    server.serve(root='.')
