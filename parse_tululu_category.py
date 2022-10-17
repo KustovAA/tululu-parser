@@ -44,20 +44,6 @@ def download_file(
     return filepath
 
 
-def download_txt(url, filename, folder='books/'):
-    return download_file(
-        url,
-        filename,
-        folder,
-        get_content=lambda r: r.text,
-        mode='w'
-    )
-
-
-def download_image(url, filename, folder='images/'):
-    return download_file(url, filename, folder)
-
-
 def extract_books_urls(book_page):
     soup = BeautifulSoup(book_page, 'lxml')
     books_url_paths = [
@@ -131,7 +117,7 @@ if __name__ == '__main__':
 
             if not skip_imgs:
                 try:
-                    img_filepath = download_image(
+                    img_filepath = download_file(
                         urljoin(book_url, parsed_book['img_src']),
                         img_filename,
                         os.path.join(dest_folder, img_folder)
@@ -141,10 +127,12 @@ if __name__ == '__main__':
 
             if not skip_txt:
                 try:
-                    book_filepath = download_txt(
+                    book_filepath = download_file(
                         urljoin(book_url, parsed_book['book_src']),
                         book_filename,
-                        os.path.join(dest_folder, book_folder)
+                        os.path.join(dest_folder, book_folder),
+                        get_content=lambda r: r.text,
+                        mode='w'
                     )
                 except requests.exceptions.HTTPError:
                     pass
