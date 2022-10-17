@@ -109,8 +109,12 @@ if __name__ == '__main__':
     parsed_books = []
     current_page = start_page
     while next_page_url and current_page < end_page:
-        book_page = download_book_page(next_page_url)
-        books_url_paths, next_page_url_path = extract_books_urls(book_page)
+        try:
+            book_page = download_book_page(next_page_url)
+            books_url_paths, next_page_url_path = extract_books_urls(book_page)
+        except (AttributeError, requests.exceptions.HTTPError):
+            continue
+
         books_urls = [urljoin(next_page_url, book_url_path) for book_url_path in books_url_paths]
         next_page_url = urljoin(next_page_url, next_page_url_path)
         current_page += 1
@@ -119,25 +123,31 @@ if __name__ == '__main__':
             try:
                 book_page = download_book_page(book_url)
                 parsed_book = parse_book_page(book_page)
-            except AttributeError:
+            except (AttributeError, requests.exceptions.HTTPError):
                 continue
 
             img_folder, img_filename = parsed_book['img_path'].split('/')
             book_folder, book_filename = parsed_book['book_path'].split('/')
 
             if not skip_imgs:
-                img_filepath = download_image(
-                    urljoin(book_url, parsed_book['img_src']),
-                    img_filename,
-                    os.path.join(dest_folder, img_folder)
-                )
+                try:
+                    img_filepath = download_image(
+                        urljoin(book_url, parsed_book['img_src']),
+                        img_filename,
+                        os.path.join(dest_folder, img_folder)
+                    )
+                except requests.exceptions.HTTPError:
+                    pass
 
             if not skip_txt:
-                book_filepath = download_txt(
-                    urljoin(book_url, parsed_book['book_src']),
-                    book_filename,
-                    os.path.join(dest_folder, book_folder)
-                )
+                try:
+                    book_filepath = download_txt(
+                        urljoin(book_url, parsed_book['book_src']),
+                        book_filename,
+                        os.path.join(dest_folder, book_folder)
+                    )
+                except requests.exceptions.HTTPError:
+                    pass
 
             parsed_books.append(parsed_book)
 
