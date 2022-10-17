@@ -107,13 +107,13 @@ if __name__ == '__main__':
     next_page_url = f'https://tululu.org/l55/{start_page}'
 
     parsed_books = []
-    i = start_page
-    while next_page_url and i < end_page:
+    current_page = start_page
+    while next_page_url and current_page < end_page:
         book_page = download_book_page(next_page_url)
         books_url_paths, next_page_url_path = extract_books_urls(book_page)
         books_urls = [urljoin(next_page_url, book_url_path) for book_url_path in books_url_paths]
         next_page_url = urljoin(next_page_url, next_page_url_path)
-        i += 1
+        current_page += 1
 
         for book_url in books_urls:
             try:
