@@ -1,0 +1,17 @@
+body {
+    grid-template-columns: unset;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    width: 100%;
+}
+
+.book {
+    display: flex;
+    justify-content: space-between;
+    width: 500px;
+}
