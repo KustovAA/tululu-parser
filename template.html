@@ -7,26 +7,55 @@
       <link rel="stylesheet" href="/static/styles.css">
   </head>
   <body>
-    <div class="container">
-      {% for book in books %}
-        <article class="book">
-          <div>
-            <img src="/parsed/{{ book.img_path|urlencode }}" alt="{{ book.title }} {{ book.author }} ">
-          </div>
-          <div>
+    <div class="wrapper">
+      <ul class="pagination">
+        <li class="pagination__item">
+          <button class="pagination__item-button">
+            Назад
+          </button>
+        </li>
+        <li class="pagination__item">
+          <button class="pagination__item-button">
+            1
+          </button>
+        </li>
+        <li class="pagination__item">
+          <button class="pagination__item-button">
+            2
+          </button>
+        </li>
+        <li class="pagination__item">
+          <button class="pagination__item-button">
+            3
+          </button>
+        </li>
+        <li class="pagination__item">
+          <button class="pagination__item-button">
+            Вперед
+          </button>
+        </li>
+      </ul>
+      <div class="container">
+        {% for book in books %}
+          <article class="book">
             <div>
-              <h5>{{ book.title }}</h5>
-              <p>{{ book.author }}</p>
-              <h6>
-                {% for genre in book.genres %}
-                  <span>{{ genre }}</span>
-                {% endfor %}
-              </h6>
-              <a href="parsed/{{ book.book_path|urlencode }}" target="_blank">Читать</a>
+              <img src="/parsed/{{ book.img_path|urlencode }}" alt="{{ book.title }} {{ book.author }} ">
             </div>
-          </div>
-        </article>
-      {% endfor %}
+            <div>
+              <div>
+                <h5>{{ book.title }}</h5>
+                <p>{{ book.author }}</p>
+                <h6>
+                  {% for genre in book.genres %}
+                    <span>{{ genre }}</span>
+                  {% endfor %}
+                </h6>
+                <a href="parsed/{{ book.book_path|urlencode }}" target="_blank">Читать</a>
+              </div>
+            </div>
+          </article>
+        {% endfor %}
+      </div>
     </div>
   </body>
 </html>

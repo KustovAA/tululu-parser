@@ -16,7 +16,7 @@ def build_page():
     with open(os.path.join('parsed', 'books_data.json'), 'r') as file:
         books = json.load(file)
 
-    os.makedirs('pages')
+    os.makedirs('pages', exist_ok=True)
     for chunk_index, chunk in enumerate(chunked(books, 5)):
         rendered_page = template.render(
             books=chunk
@@ -31,4 +31,5 @@ if __name__ == '__main__':
 
     server = Server()
     server.watch('template.html', build_page)
+    server.watch('static/styles.css', build_page)
     server.serve(root='.')
