@@ -29,3 +29,11 @@
 ### Как запускать
 
 ```python main.py --start_id=<start_id> --end_id=<end_id> --dest_folder=<dest_folder> --skip_imgs=<skip_imgs> --skip_txt=<skip_txt> --json_path=<json_path>```
+
+### Генерация html страниц для сайта с книгами
+Из скачанных файлов можно сформировать сайт скриптом `render_website.py`.
+
+```
+python render_website.py
+```
+В результате в папке `pages` сформируются страницы сайта `index1.html`, `index2.html`, `index3.html` и т.д.
