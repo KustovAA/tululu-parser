@@ -17,12 +17,15 @@ def build_page():
         books = json.load(file)
 
     os.makedirs('pages', exist_ok=True)
-    for chunk_index, chunk in enumerate(chunked(books, 5)):
+    pages_amount = 5
+    for chunk_index, chunk in enumerate(chunked(books, pages_amount), start=1):
         rendered_page = template.render(
-            books=chunk
+            books=chunk,
+            pages_amount=pages_amount,
+            current_page=chunk_index
         )
 
-        with open(os.path.join('pages', f'index{chunk_index + 1}.html'), 'w', encoding="utf8") as file:
+        with open(os.path.join('pages', f'index{chunk_index}.html'), 'w', encoding="utf8") as file:
             file.write(rendered_page)
 
 
