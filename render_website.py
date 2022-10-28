@@ -34,5 +34,4 @@ if __name__ == '__main__':
 
     server = Server()
     server.watch('template.html', build_page)
-    server.watch('static/styles.css', build_page)
     server.serve(root='.')
